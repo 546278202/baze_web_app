@@ -10,7 +10,7 @@
 					<input name="searchBtn" type="button" value="搜索">
 				</div>
 				<div class="searchWord">
-					<font color="#f3cb0a">热门搜索:</font>
+					<font color="#f3cb0a">lllll:</font>
 					<ul>
 						<li><a href="#" target="_blank">连衣裙</a></li>
 					</ul>
