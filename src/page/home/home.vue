@@ -74,7 +74,6 @@
 <style scoped>
 	.headsearch {
 		height: 140px;
-		width: 1200px;
 		background-color: #fff;
 	}
 
@@ -85,7 +84,6 @@
 
 	.headtop {
 		height: 154px;
-		width: 1200px;
 		background-color: #fff;
 	}
 
@@ -107,13 +105,13 @@
 
 	.headsearch_txt input:first-child {
 		width: 460px;
-		height: 40px;
+		height: 46px;
 		font-size: 16px;
 		color: #999;
 		border-color: #f3cb0a;
 		border-style: solid;
 		border-width: 2px;
-		padding-left: 50px;
+		padding-left: 10px;
 		float: left;
 		list-style: none;
 		text-decoration: none;

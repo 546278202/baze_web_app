@@ -30,8 +30,8 @@
 		height: 26px;
 		line-height: 26px;
 		width: 100%;
-		padding: 0 30px;
 		background-color: #eeeeee;
+		overflow: hidden;
 	}
 	.headword ol {float:left;}
 	.headword ul {float:right;}
