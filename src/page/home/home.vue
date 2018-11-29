@@ -33,16 +33,29 @@
 
 			</div>
 			<div style="width: 690px;height: 540px;float:left;margin:0 10px;overflow:hidden;">
-				<div class="swiper-container">
-					<div class="swiper-wrapper">
-						<div class="swiper-slide" v-for="item in lunBoArr"><img v-bind:src="item.wareCover" style="width: 100%;height:100%;" /></div>
-					</div>
-					<!-- 如果需要分页器 -->
-					<div class="swiper-pagination"></div>
+				<div>
+					<swiper :options="swiperOption" ref="mySwiper">
+						<swiper-slide class="swiper-slide" v-for="(activity,index) in lunBoArr" :key="index">
+							<div class="activity-info">
+								<a class="cover">
+									<img :src="activity.wareCover" style="width:100%;height:100%;">
+								</a>
+							</div>
+						</swiper-slide>
+						<!-- Add Pagination -->
+						<div class="swiper-pagination" slot="pagination"></div>
+					</swiper>
 
-					<!-- 如果需要导航按钮 -->
-					<div class="swiper-button-prev"></div>
-					<div class="swiper-button-next"></div>
+					<!-- <swiper :options="swiperOption" ref="mySwiper">
+					
+						<swiper-slide v-for="item in lunBoArr">
+							<img v-bind:src="item.wareCover" style="width: 100%;height:100%;" />
+						</swiper-slide>
+					
+
+					</swiper>
+				
+					<div class="swiper-pagination" slot="pagination"></div> -->
 				</div>
 				<div style="width:690px;overflow:hidden;box-sizing: border-box;margin-top: 10px;">
 					<div style="width:165px;height:140px;font-size:16px;float:left;margin-right:10px;">
@@ -64,9 +77,9 @@
 			<div style="width: 290px;height: 540px;float:left;">
 				<div style="height:80px;background: #f3cb0a;margin-top: 10px;"></div>
 				<div style="height:150px;background: #fff;">
-						<div class="bodyRightTopLoginText">
-							<a href="#">登录</a> / <a href="#">注册</a>
-						</div>
+					<div class="bodyRightTopLoginText">
+						<a href="#">登录</a> / <a href="#">注册</a>
+					</div>
 				</div>
 				<div style="height:30px;background: #f3cb0a;color:#fff;text-align: center;line-height: 30px;font-size:16px;">公告</div>
 				<div style="height:120px;font-size:16px;margin-bottom:10px;background: #fff;">
@@ -81,23 +94,66 @@
 	</div>
 </template>
 <script>
-	import Swiper from "swiper";
+	import { swiper, swiperSlide } from 'vue-awesome-swiper'
 	import Header from "../../components/header";
 	import { getNowFormatDate } from "../../config/mUtils";
 	export default {
 		data() {
 			return {
+				swiperOption: {
+					spaceBetween: 5,
+					pagination: {
+						el: '.swiper-pagination',
+						clickable: true,
+						bulletClass: 'my-bullet',
+						bulletActiveClass: 'my-bullet-active'
+					}
+				},
+
 				lunBoArr: [],
-				lists: []
-			};
+				lists: [],
+				swiperOption: {
+					spaceBetween: 5,
+					autoplay: {
+						delay: 1000,
+					},
+					pagination: {
+						el: '.swiper-pagination',
+						clickable: true,
+						bulletClass: 'my-bullet',
+						bulletActiveClass: 'my-bullet-active'
+					},
+
+					//是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
+					notNextTick: true,
+					pagination: '.swiper-pagination',
+					slidesPerView: 'auto',
+					centeredSlides: true,
+					paginationClickable: true,
+					spaceBetween: 30,
+					onSlideChangeEnd: swiper => {
+						//这个位置放swiper的回调方法
+						this.page = swiper.realIndex + 1;
+						this.index = swiper.realIndex;
+					}
+				}
+			}
+		},
+		//定义这个sweiper对象
+		computed: {
+			swiper() {
+				return this.$refs.mySwiper.swiper;
+			}
 		},
 		mounted() {
+			//这边就可以使用swiper这个对象去使用swiper官网中的那些方法
 			var data = {
 				time: getNowFormatDate(),
 				pageNum: "1",
 				pageSize: "10"
 			};
-			this.$http.post(process.env.API_HOST + "/mall_api/shop/get_ware_list", data)
+			this.$http
+				.post(process.env.API_HOST + "/mall_api/shop/get_ware_list", data)
 				.then(response => {
 					var data = response.data;
 					if (data.code == 0 && data.success == true) {
@@ -107,20 +163,15 @@
 				.catch(error => {
 					console.log(error);
 				});
-			let mySwiper = new Swiper('.swiper-container', {
-				observer: true,//修改swiper自己或子元素时，自动初始化swiper
-				observeParents: true,//修改swiper的父元素时，自动初始化swiper
-				// 如果需要分页器
-				pagination: {
-					el: '.swiper-pagination',
-				},
+			this.swiper.slideTo(0, 0, false);
 
-			})
 		},
-
 		components: {
+			swiper,
+			swiperSlide,
 			Header
 		},
+
 		methods: {}
 	};
 </script>
@@ -194,14 +245,29 @@
 		width: 690px;
 		height: 390px;
 	}
-	.bodyRightTopLoginText{
+
+	.bodyRightTopLoginText {
 		text-align: center;
 		color: #999;
 		font-size: 16px;
 	}
+
 	.bodyRightTopLoginText a {
 		color: #999;
 		font-family: "微软雅黑";
 	}
-	
+
+	.my-bullet {
+		border-radius: .02rem;
+		width: .04rem;
+		height: .04rem;
+		margin: 0 .03rem;
+		display: inline-block;
+		background: rgba(0, 0, 0, 0.20);
+	}
+
+	.my-bullet-active {
+		background: #3CDBC0;
+		width: .16rem
+	}
 </style>

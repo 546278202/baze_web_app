@@ -2,7 +2,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import './style/common.css' /*引入公共样式*/
-import 'swiper/dist/css/swiper.css';
+
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
+Vue.use(VueAwesomeSwiper)
+
 Vue.config.productionTip = false
 import axios from 'axios'
 import qs from 'qs'
