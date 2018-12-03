@@ -1,6 +1,6 @@
 <template>
 	<div class="footer">
-		北京市:
+		
 	</div>
 </template>
 <script>
