@@ -163,9 +163,6 @@
 	};
 </script>
 <style lang="scss" scoped>
-
-
-
 	.swiper-container {
 		width: 690px;
 		height: 390px;

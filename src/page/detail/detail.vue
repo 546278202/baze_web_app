@@ -22,49 +22,109 @@
 		</div>
 		<div style="width:100%;background:#eee;">
 			<div style="width:1200px;margin:0 auto;">
-				<div style="height:400px;width:1020px;background:#fff;padding:10px 20px;">
-					<div style="width:400px;height:400px;"></div>
+				<div style="height:440px;width:1020px;background:#fff;padding:10px 20px;">
+					<div style="float:left;">
+						<div class="pic-box">
+							<pic-zoom :url='url' :scale="3" style="height:100%;"></pic-zoom>
+						</div>
+						<div class="pic-tab">
+							<div @click="clickLeft" style="display: flex;align-items: center;width:30px;float:left;"><i class="iconfont icon-fanhui" style="font-size:30px;"></i></div>
+							<div style="overflow: hidden;width: 340px;height: 80px;position:relative;">
+								<ul v-bind:style="{width: auto, position: position ,left:left+ 'px',top:top }">
+									<li v-for="(item,index) in datalist.coverList" @mouseover="addClass(index)" v-bind:class="{act:index==current}"><img :src="item"></li>
+								</ul>	
+							</div>
+							<div @click="clickRight" style="display: flex;align-items: center;width:30px;float:left;"><i class="iconfont icon-xiangyou" style="font-size:30px;"></i></div>
+						</div>
+					</div>
+					<div style="width:560px;float:left;margin-left:20px;overflow:hidden;">
+						<div style="height:85px;font-size:18px;color:#666;">{{datalist.warename}}</div>
+						<div style="height:100px;background:#f9f9f9;justify-content: space-between;align-items: center;display: flex;">
+							<div style="font-size:18px; color:#999;margin-left:10px;">
+								<div style="margin-bottom:10px;"><span>价格：</span><span style="font-size:30px;color:#cc0000;">￥{{datalist.wareprice}}</span></div>
+								<div><span>优惠券:</span></div>	
+							</div>
+							<div class="goBuyBtn">立刻购买</div>
+						</div>
+
+						<div style="margin-top:16px;color:#666;display: flex;">
+							邮费:<span style="color:#333;font-sizt:16px;">2332323</span>
+						</div>
+
+						<div style="margin-top:16px;color:#666;display: flex;">
+							<div style="width:70px;">{{specJson.specName}}：</div>
+							<div>
+								<a v-for="(item,index) in specJson.specValue" @mouseover="clickMe(index)" class="gui_ge" :class="{act_gui_ge:index==current2}">{{item.specName}}</a>
+							</div>
+						</div>
+						<!-- 加数量购买 -->
+						<div style="display:flex;align-items: center;">
+							<div class="addNumBtn" >
+								<div><i class="iconfont icon-iconfontmove"></i></div>
+								<div class="center">1</div>
+								<div><i class="iconfont icon-iconfontadd"></i></div>
+							</div>
+							<div class="addCarBtn">加入购物车</div>
+						</div>
+						<div style="display:flex;align-items: center;font-size:16px;color:#666;">
+							服务承诺 坏果必赔 正品保证
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="img-con">
-			<img-zoom src="../../images/erweima.png" bigsrc="src/img/img-big.jpg"></img-zoom>
-		</div>
-		<div class="img-con2">
-			<img-zoom src="../../images/erweima.png" width="450" height="250" bigsrc="../..//images/erweima.png" :configs="configs"></img-zoom>
-		</div>
+		
+		
 		<Footer></Footer>
 	</div>
 </template>
 <script>
-
 	import Header from "../../components/header";
 	import Search from "../../components/search";
 	import daoHang from "../../components/daoHang";
 	import Footer from "../../components/footer";
-	import imgZoom from '../../components/imgZoom';
+	import PicZoom from '../../components/PicZoom'
 	import { getNowFormatDate } from "../../config/mUtils";
 	export default {
-		name: 'App',
+		name: "App",
 		data() {
 			return {
-				configs: {
-					width: 650,
-					height: 350,
-					maskWidth: 100,
-					maskHeight: 100,
-					maskColor: 'red',
-					maskOpacity: 0.2
-				}
-			}
+				datalist:'',
+				specJson:'',
+				offsetCount:0,
+				url:'',
+			
+	
+				width:"auto",
+				position:"absolute",
+				left: 0,
+				top: 0,
+				current:0,
+				current2:0,
+				num:1,
+			};
 		},
 		computed: {},
 		mounted() {
 			var data = {
-				time: getNowFormatDate(),
-				pageNum: "1",
-				pageSize: "10"
-			}
+				userId:'',
+				wareid: 97
+			};
+			this.$http
+			.post(process.env.API_HOST + "/mall_api/shop/get_ware_info", data)
+			.then(response => {
+				var data = response.data;
+				if (data.code == 0 && data.success == true) {
+					console.log(data.data)
+					this.datalist=data.data;
+					this.url=data.data.coverList[0];
+					this.specJson=data.data.specJson
+					console.log(this.specJson)
+				}
+			})
+			.catch(error => {
+				console.log(error);
+			});
 		},
 
 		components: {
@@ -72,12 +132,37 @@
 			Search,
 			daoHang,
 			Footer,
-			imgZoom
+			PicZoom
 		},
 		methods: {
+		
+			clickLeft(){
+				if(this.num>1){
+					this.num-=1
+					this.left=this.left+this.num*80
+				}
+			},
+			
+			clickRight(e){
+				let aa=this.datalist.coverList.length
+				var bb=this.num*4
+				if(Math.floor(aa/bb)>0){
+					this.left=-this.num*80
+					this.num++
+				}	
+			},
+			
+			addClass:function(index){
+				this.url=this.datalist.coverList[index]
+				this.current=index;
+			},
 
+			clickMe:function(index){
+				this.current2=index;
+			}
+			
 		}
-	}
+	};
 </script>
 <style lang="scss" scoped>
 	.crumbs_c {
@@ -88,31 +173,104 @@
 		font-size: 14px;
 		font-family: "微软雅黑";
 		text-align: left;
-
-		a {
-			color: #666666;
-			font-size: 14px;
-			font-family: "微软雅黑";
-			text-decoration: none;
-		}
-
-		.crumbs_r {
-			display: flex;
-			height: 40px;
-			line-height: 40px;
-		}
 	}
 
-	.img-con {
-		border: 1px solid #ccc;
-		text-align: center;
-		padding: 0;
+	.crumbs_c a {
+		color: #666666;
+		font-size: 14px;
+		font-family: "微软雅黑";
+		text-decoration: none;
 	}
 
-	.img-con2 {
-		border: 1px solid #bbb;
+	.crumbs_c .crumbs_r {
+		display: flex;
+		height: 40px;
+		line-height: 40px;
+	}
+	.pic-box{
+		width:400px;
+		height:320px;
+		border:1px solid #eee;
+	}
+	.pic-tab{
+		margin-top:10px;
+		width: 400px;
+		overflow: hidden;
+		display: flex;
+		justify-content: space-between;
+		}
+	.pic-tab li{
+		float:left;
+		width:80px;
+		height:80px;
+		margin-left:5px;
+		img{
+			width:100%;
+			height:100%;
+		}
+	}
+	.pic-tab li:first-child{
+		margin-left:0;
+	}
+	.act{border:1px solid red;}
+	.goBuyBtn{
+		width:120px;
+		height:40px;
+		background:#cc0000;
+		color:#fff;
+		font-size:20px;
+		text-align:center;
+		line-height:40px;
+		margin-right:20px;
+	}
+	// 商品规格
+	.gui_ge{
+		color: #666;
+		width: 150px;
+		height: 30px;
+		border: 1px solid #d3d3d3;
+		margin: 0 20px 20px 0;
+		font-size: 16px;
+		display: inline-block;
 		text-align: center;
-		float: left;
-		margin-top: 20px;
+		line-height: 30px;
+		cursor: pointer;
+	}
+	.act_gui_ge{
+		color: #333;
+		width: 150px;
+		height: 30px;
+		border: 1px solid #cc0000;
+		margin: 0 20px 20px 0;
+		font-size: 16px;
+		display: inline-block;
+		text-align: center;
+		line-height: 30px;
+		cursor: pointer;
+	}
+	.addCarBtn{
+		width:150px;
+		height:40px;
+		background:#f3cb0a;
+		color:#fff;
+		font-size:20px
+		;text-align:center;
+		line-height:40px;
+		cursor: pointer;
+	}
+	.addNumBtn{
+		text-align: center;
+		display: flex;
+		border:1px solid #d3d3d3;
+		width:118px;
+		height: 30px;
+		line-height: 30px;
+		margin-left: 30px;
+		margin-right: 50px;
+		div{width:33.33%;}
+		.center{
+			border-right:1px solid #d3d3d3;
+			border-left:1px solid #d3d3d3;
+		}
 	}
 </style>
