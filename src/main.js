@@ -1,10 +1,13 @@
 import Vue from 'vue'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import App from './App'
 import router from './router'
 import './style/common.css' /*引入公共样式*/
 
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'swiper/dist/css/swiper.css'
+Vue.use(ElementUI);
 Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false

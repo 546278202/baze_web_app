@@ -16,10 +16,10 @@
 			<!-- 中间 -->
 			<div style="width: 690px;height: 540px;float:left;margin:0 10px;overflow:hidden;">
 				<swiper :options="swiperOption" ref="mySwiper">
-					<swiper-slide class="swiper-slide" v-for="(activity,index) in lunBoArr" :key="index">
+					<swiper-slide class="swiper-slide" v-for="(item,index) in lunBoArr" :key="index">
 						<div class="activity-info">
-							<router-link :to="{ path: '../detail', query: { plan: 'private' }}">
-								<img :src="activity.wareCover" style="width:100%;height:390px;">
+							<router-link :to="{ path: '../detail', query: { id: item.wareid }}">
+								<img :src="item.wareCover" style="width:100%;height:390px;">
 							</router-link>
 
 						</div>
