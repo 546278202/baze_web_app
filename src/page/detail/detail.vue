@@ -68,7 +68,6 @@
 						<div style="display:flex;align-items: center;">
 							<div class="addNumBtn" >
 								<div @click="addDown"><i class="iconfont icon-iconfontmove"></i></div>
-								
 								<div class="center">{{buyNum}}</div>
 								<div @click="addUp"><i class="iconfont icon-iconfontadd"></i></div>
 							</div>
