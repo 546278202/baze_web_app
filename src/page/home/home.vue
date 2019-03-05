@@ -15,17 +15,9 @@
 			</div>
 			<!-- 中间 -->
 			<div style="width: 690px;height: 540px;float:left;margin:0 10px;overflow:hidden;">
-				<swiper :options="swiperOption" ref="mySwiper">
-					<swiper-slide class="swiper-slide" v-for="(item,index) in lunBoArr" :key="index">
-						<div class="activity-info">
-							<router-link :to="{ path: '../detail', query: { id: item.wareid }}">
-								<img :src="item.wareCover" style="width:100%;height:390px;">
-							</router-link>
-
-						</div>
-					</swiper-slide>
-					<div class="swiper-pagination" slot="pagination"></div>
-				</swiper>
+				<loop :lunBoArr="lunBoArr">
+							
+				</loop>
 				<div style="width:690px;overflow:hidden;box-sizing: border-box;margin-top: 10px;">
 					<div style="width:165px;height:140px;font-size:16px;float:left;margin-right:10px;">
 						<img src="../../images/jz1.png" style="width:100%;height:100%;">
@@ -46,7 +38,7 @@
 				<div style="height:80px;display:flex;align-items:center;justify-content: center;"><img src="../../images/login2.png" style="width:60px;height:60px;"></div>
 				<div class="login">
 					<div class="bodyRightTopLoginText">
-						<a href="#">登录</a> /
+						<router-link :to="{path:'/login'}" class="detail_top">登录</router-link>/
 						<a href="#">注册</a>
 					</div>
 					<div class="shouCang" >
@@ -88,37 +80,27 @@
 	</div>
 </template>
 <script>
-	import { swiper, swiperSlide } from "vue-awesome-swiper";
 	import Header from "../../components/header";
 	import Search from "../../components/search";
 	import daoHang from "../../components/daoHang";
 	import Footer from "../../components/footer";
+	import loop from "../../components/loop";
+
 	import { getNowFormatDate } from "../../config/mUtils";
 	export default {
 		data() {
 			return {
 				typeData: [], //分类数据
 				lunBoArr: [], //轮播数据
-				swiperOption: {
-					spaceBetween: 5,
-					autoplay: { delay: 2000 },
-					notNextTick: true,
-					pagination: ".swiper-pagination",
-					slidesPerView: "auto",
-					centeredSlides: true,
-					paginationClickable: true,
-					spaceBetween: 30
-				}
 			};
 		},
-		//定义这个sweiper对象
+	
 		computed: {
-			swiper() {
-				return this.$refs.mySwiper.swiper;
-			}
+		
+		
 		},
 		mounted() {
-			//这边就可以使用swiper这个对象去使用swiper官网中的那些方法
+	
 			var data = {
 				time: getNowFormatDate(),
 				pageNum: "1",
@@ -131,12 +113,12 @@
 					console.log(data);
 					if (data.code == 0 && data.success == true) {
 						this.lunBoArr = data.data.wareList;
+
 					}
 				})
 				.catch(error => {
 					console.log(error);
 				});
-			this.swiper.slideTo(0, 0, false);
 
 			this.$http
 				.post(process.env.API_HOST + "/mall_api/classify/getClassifyList", "")
@@ -152,22 +134,16 @@
 				});
 		},
 		components: {
-			swiper,
-			swiperSlide,
 			Header,
 			Search,
 			daoHang,
-			Footer
+			Footer,
+			loop
 		},
 		methods: {}
 	};
 </script>
 <style lang="scss" scoped>
-	.swiper-container {
-		width: 690px;
-		height: 390px;
-	}
-
 	.bodyRightTopLoginText {
 		text-align: center;
 		color: #999;

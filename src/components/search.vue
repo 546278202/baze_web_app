@@ -7,10 +7,10 @@
 			<div style="display:flex;">
 				<div class="headsearch_input">
 					<img src="../images/searchlogo.png" style="width:24px;height:24px;margin-right:10px;">
-					<input placeholder="搜你想搜的">
+					<input placeholder="搜你想搜的"  v-model="value">
 				</div>
 				<div>
-					<button class="searchBtn">搜索</button>
+					<button class="searchBtn" @click="toSearch">搜索</button>
 				</div>
 			</div>
 			<div style="width:80px;height:80px;">
@@ -22,7 +22,17 @@
 <script>
 	export default {
 		data() {
-			return {};
+			return {
+				value:''
+			};
+		},
+		methods: {
+			toSearch(){
+				let paramer={
+					name:this.value
+				}
+                this.$router.push({ path: '/search',query:paramer});
+			}
 		}
 	};
 </script>

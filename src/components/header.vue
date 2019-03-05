@@ -5,7 +5,7 @@
 				<a href="#" target="_blank">欢迎来到商城</a>
 			</ol>
 			<ul>
-				<a href="#" target="_blank">登录/注册</a>
+				<router-link :to="{path:'/login'}">登录/注册</router-link>
 				<a href="#" target="_blank">我的订单</a>
 				<a href="#" target="_blank">购物车</a>
 				<a href="#" target="_blank">联系客服</a>

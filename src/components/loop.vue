@@ -1,52 +1,75 @@
 <template>
 	<div>
-		<swiper :options="swiperOption"  ref="mySwiper">
-			<!-- 这部分放你要渲染的那些内容 -->
-			<swiper-slide v-for="item in items">
-			</swiper-slide>
-			<!-- 这是轮播的小圆点 -->
-			<div class="swiper-pagination" slot="pagination"></div>
-		</swiper>
+		<div class="swiper-container">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide" v-for="(item,index) in lunBoArr">
+					<img :src="item.wareCover" alt="">
+				</div>
+			</div>
+			<div class="swiper-pagination"></div>
+			<div class="swiper-button-prev"></div><!--左箭头-->
+    		<div class="swiper-button-next"></div><!--右箭头-->
+		</div>
 	</div>
 </template>
 <script>
-	import { swiper, swiperSlide } from 'vue-awesome-swiper'
+	import Swiper from "swiper"; 
 	export default {
-		components: {
-			swiper,
-			swiperSlide
-		},
+		props:['lunBoArr'],
 		data() {
 			return {
-				swiperOption: {
-				//是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
-				notNextTick: true,
-		        pagination: '.swiper-pagination',
-		        slidesPerView: 'auto',
-		        centeredSlides: true,
-		        paginationClickable: true,
-		        spaceBetween: 30,
-		            onSlideChangeEnd: swiper => {
-		            	//这个位置放swiper的回调方法
-		            	this.page = swiper.realIndex+1;
-		            	this.index = swiper.realIndex;
-		            }
-		        }
+
 			}
 		},
-		//定义这个sweiper对象
-		computed: {
- 
-		    swiper() {
-		      return this.$refs.mySwiper.swiper;
-		    }
+		components: {
+
 		},
-		mounted () {
-			//这边就可以使用swiper这个对象去使用swiper官网中的那些方法
-		    this.swiper.slideTo(0, 0, false);
-		}
- 
+		watch:{
+			lunBoArr(val){
+				console.log(val)
+				
+			}
+		},
+     
+		computed: {
+			
+			
+		},
+		mounted(){
+			setTimeout(function(){
+				var mySwiper = new Swiper('.swiper-container',{
+					direction: 'horizontal',
+					pagination :{
+						el: '.swiper-pagination',
+						clickable :true,
+					},
+					navigation: {
+						nextEl: '.swiper-button-next',
+						prevEl: '.swiper-button-prev',
+					},
+          			loop:true,
+					autoplay: {
+						disableOnInteraction: false,
+						waitForTransition: false,
+					},
+				})
+			},1000)
+		},
+
 	}
 </script>
-<style>
+<style lang="scss" scoped>
+	.swiper-container{
+		height:540px;
+		.swiper-wrapper{
+			height:100%;
+			.swiper-slide{
+				height:100%;
+				img{
+					width:100%;
+					height:100%;
+				}
+			}
+		}
+	}
 </style>
